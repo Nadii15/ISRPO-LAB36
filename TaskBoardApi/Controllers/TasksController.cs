@@ -39,7 +39,7 @@ public class TasksController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<TaskItem>> Create([FromBoby]TaskItem task)
+    public async Task<ActionResult<TaskItem>> Create([FromBody]TaskItem task)
     {
         if (string.IsNullOrWhiteSpace(task.Title))
         {
@@ -49,7 +49,8 @@ public class TasksController : ControllerBase
         task.IsCompleted = false;
         task.CreatedAt = DateTime.UtcNow;
         _db.Tasks.Add(task);
-        await _db.SaveChangesAsync(nameof(GetById), new { id = task.Id }, task);
+        await _db.SaveChangesAsync();
+        return CreatedAtAction(nameof(GetById), new { id = task.Id }, task);
     }
 
     [HttpPut("{id}")]
@@ -75,7 +76,7 @@ public class TasksController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult>Delete(int id)
     {
-        var task = await _db.Task.FindAsync(id);
+        var task = await _db.Tasks.FindAsync(id);
         if (task is null)
         {
             return NotFound(new { message = $"Задача с id={id}не найдена" });
