@@ -74,15 +74,15 @@ public class TasksController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult>Delete(int id)
-    {
+    public async Task<ActionResult> Delete(int id) {
         var task = await _db.Tasks.FindAsync(id);
-        if (task is null)
-        {
+        if (task is null) {
             return NotFound(new { message = $"Задача с id={id}не найдена" });
         }
         _db.Tasks.Remove(task);
         await _db.SaveChangesAsync();
         return NoContent();
     }
+    
+
 }
